@@ -1,6 +1,6 @@
 # Hello Hangman
 
-![Hello Hangman](assets/Hangman_Game_Screenshot.png)
+![Hello Hangman](assets/Hangman_Game_Screenshot.PNG)
 
 ## Table of Contents
 
@@ -84,11 +84,11 @@ Guess words related to the holiday season and Christmas.
 
 Here are some screenshots from the Hangman Game:
 
-![Main Menu](assets/Main_Menu_Screenshot.png)
+![Main Menu](assets/Main_Menu_Screenshot.PNG)
 
-![Options Menu](assets/Options_Menu_Screenshot.png)
+![Options Menu](assets/Options_Menu_Screenshot.PNG)
 
-![Gameplay](assets/Gameplay_Screenshot.png)
+![Gameplay](assets/Gameplay_Screenshot.PNG)
 
 ## Contributing
 
