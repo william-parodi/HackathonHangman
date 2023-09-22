@@ -1,6 +1,6 @@
 # Hello Hangman
 
-![Hellow Hangman](assets/Hangman_Game_Screenshot.png)
+![Hello Hangman](assets/Hangman_Game_Screenshot.png)
 
 ## Table of Contents
 
