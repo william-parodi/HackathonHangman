@@ -1,27 +1,29 @@
+# Import necessary libraries
 import pygame
-from button import Button
+from button import Button  # Import a custom button class
 import time
-import Words 
+import Words  # Import a custom module "Words" containing word lists
 import random
 import sys
 
+# Initialize the pygame library
 pygame.init()
 
-#Sets the display of the screen and the Title of the first scene
+# Set up the game window and its title
 SCREEN = pygame.display.set_mode((1408, 792))
 pygame.display.set_caption("Menu")
 
-#Sets the backkground for all the scenes
+# Load the background image for all scenes
 BG = pygame.image.load("assets/PurdueBackground.png")
 
-#Sets the category 
+# Set the initial category for the game
 category = "Standard"
 
-#sets sounds for clicking the buttons 
+# Set up button click sound effect
 BUTTON_SOUND = pygame.mixer.Sound('assets/buttonSound.wav')
 BUTTON_SOUND.set_volume(0.2)
 
-#sets music
+# Set up background music
 BACKGROUND_MUSIC1 = pygame.mixer.Sound('assets/BeepBox-HailPurdue(MusicBox2).wav')
 BACKGROUND_MUSIC2 = pygame.mixer.Sound('assets/BeepBox-HailPurdue(Creepy).wav')
 BACKGROUND_MUSIC3 = pygame.mixer.Sound('assets/BeepBox-HailPurdue(Christmas).wav')
@@ -32,129 +34,148 @@ BACKGROUND_MUSIC1.play(-1)
 BACKGROUND_MUSIC2.play(-1)
 BACKGROUND_MUSIC3.play(-1)
 
-#establish variables for the colors
-white = (255,255,255)
-black = (0,0,0)
-red = (255,0,0)
-green = (0,255,0)
-blue = (0,0,255)
-HANGMAN_ORIGIN = [745, 400]   
+# Define color variables
+white = (255, 255, 255)
+black = (0, 0, 0)
+red = (255, 0, 0)
+green = (0, 255, 0)
+blue = (0, 0, 255)
+HANGMAN_ORIGIN = [745, 400]
 
-def get_word(category):                              # generates word and changes it to uppercase
-    if category=="Purdue":
-        random_index = random.randint(0,32)
+# Function to get a word from the selected category
+def get_word(category):
+    # Select a word from the specified category and convert it to uppercase
+    if category == "Purdue":
+        random_index = random.randint(0, 32)
         word = Words.purdue_words[random_index]
-    elif category=="Halloween":
-        random_index = random.randint(0,32)
+    elif category == "Halloween":
+        random_index = random.randint(0, 32)
         word = Words.halloween_words[random_index]
-    elif category=="Christmas":
-        random_index = random.randint(0,32)
+    elif category == "Christmas":
+        random_index = random.randint(0, 32)
         word = Words.christmas_words[random_index]
     return word.upper()
 
-#animates the hangman based on the number of tries left 
+# Function to animate the hangman based on the number of tries left
 def hangman_animation(tries):
-   if tries <= 5: 
-      pygame.draw.circle(SCREEN, red, (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1]-50), 25) #draws the head: 1st miss
-      if tries <= 4:
-         pygame.draw.line(SCREEN, red, (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1]-50), (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1]+50), 5) #draws the body: 2nd miss
-         if tries <= 3:
-            pygame.draw.line(SCREEN, red, (HANGMAN_ORIGIN[0]-50, HANGMAN_ORIGIN[1]), (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1]), 5) #draws the left arm: 3rd miss
-            if tries <= 2:
-               pygame.draw.line(SCREEN, red, (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1]), (HANGMAN_ORIGIN[0]+50, HANGMAN_ORIGIN[1]), 5) #draws the right arm: 4th miss 
-               if tries <= 1:
-                  pygame.draw.line(SCREEN, red, (HANGMAN_ORIGIN[0]-25, HANGMAN_ORIGIN[1]+75), (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1]+50), 5) #draws left leg: 5th miss
-                  if tries <= 0:
-                     pygame.draw.line(SCREEN, red, (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1]+50), (HANGMAN_ORIGIN[0]+25, HANGMAN_ORIGIN[1]+75), 5) #draws right leg
-                     pygame.draw.circle(SCREEN, black, (HANGMAN_ORIGIN[0]+10, HANGMAN_ORIGIN[1]-60), 3) #draws eyes
-                     pygame.draw.circle(SCREEN, black, (HANGMAN_ORIGIN[0]-10, HANGMAN_ORIGIN[1]-60), 3) #draws eyes
-                     pygame.draw.line(SCREEN, black, (HANGMAN_ORIGIN[0]-10, HANGMAN_ORIGIN[1]-50), (HANGMAN_ORIGIN[0]+10, HANGMAN_ORIGIN[1]-50), 5) #Draws mouth
+    if tries <= 5:
+        # Draw the hangman's head on the 1st miss
+        pygame.draw.circle(SCREEN, red, (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1] - 50), 25)
+        if tries <= 4:
+            # Draw the hangman's body on the 2nd miss
+            pygame.draw.line(SCREEN, red, (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1] - 50),
+                             (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1] + 50), 5)
+            if tries <= 3:
+                # Draw the left arm on the 3rd miss
+                pygame.draw.line(SCREEN, red, (HANGMAN_ORIGIN[0] - 50, HANGMAN_ORIGIN[1]),
+                                 (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1]), 5)
+                if tries <= 2:
+                    # Draw the right arm on the 4th miss
+                    pygame.draw.line(SCREEN, red, (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1]),
+                                     (HANGMAN_ORIGIN[0] + 50, HANGMAN_ORIGIN[1]), 5)
+                    if tries <= 1:
+                        # Draw the left leg on the 5th miss
+                        pygame.draw.line(SCREEN, red, (HANGMAN_ORIGIN[0] - 25, HANGMAN_ORIGIN[1] + 75),
+                                         (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1] + 50), 5)
+                        if tries <= 0:
+                            # Draw the right leg and facial features on the last miss
+                            pygame.draw.line(SCREEN, red, (HANGMAN_ORIGIN[0], HANGMAN_ORIGIN[1] + 50),
+                                             (HANGMAN_ORIGIN[0] + 25, HANGMAN_ORIGIN[1] + 75), 5)
+                            pygame.draw.circle(SCREEN, black, (HANGMAN_ORIGIN[0] + 10, HANGMAN_ORIGIN[1] - 60), 3)
+                            pygame.draw.circle(SCREEN, black, (HANGMAN_ORIGIN[0] - 10, HANGMAN_ORIGIN[1] - 60), 3)
+                            pygame.draw.line(SCREEN, black, (HANGMAN_ORIGIN[0] - 10, HANGMAN_ORIGIN[1] - 50),
+                                             (HANGMAN_ORIGIN[0] + 10, HANGMAN_ORIGIN[1] - 50), 5)
 
-
-#Draws the noose to hang the hangman 
+# Function to draw the noose for hanging the hangman
 def draw_noose(x, y):
-    pygame.draw.line(SCREEN, black, (x-50, y), (x+50, y), 7)
-    pygame.draw.line(SCREEN, black, (x, y), (x, y-200), 5)
-    pygame.draw.line(SCREEN, black, (x, y-200), (x+45, y-200), 5)
-    pygame.draw.line(SCREEN, black, (x+45, y-200), (x+45, y-175), 5)
+    pygame.draw.line(SCREEN, black, (x - 50, y), (x + 50, y), 7)
+    pygame.draw.line(SCREEN, black, (x, y), (x, y - 200), 5)
+    pygame.draw.line(SCREEN, black, (x, y - 200), (x + 45, y - 200), 5)
+    pygame.draw.line(SCREEN, black, (x + 45, y - 200), (x + 45, y - 175), 5)
 
-def get_font(size): # Returns Press-Start-2P in the desired size
+# Function to get the desired font with a specified size
+def get_font(size):
     return pygame.font.Font("assets/font.ttf", size)
 
-#The main scene where the gameplay takes place
+# Main gameplay scene
 result = ""
 def play(word):
     result = word
     tries = 6
-    wordLength = len(word)                   
-    word_completion = "_ " * wordLength      # displays _ for the number of letters in the word
+    wordLength = len(word)
+    word_completion = "_ " * wordLength  # Display underscores for each letter in the word
     guessed = False
     guessed_letters = []
     guessed_words = []
-    word_completion_list =  list(word)
-    word_as_list = list(word)                #Makes a letter equivalent of word_completion_list to allow us to compare word_completion to the actual word
-    for i in range (len(word_completion_list)):
-      if not(word_completion_list[i] == " "):word_completion_list[i] = ' _ '
-    for i in range (len(word_as_list)):
-      if not(word_as_list[i] == " "): word_as_list[i] = " " + word_as_list[i] + " "
+    word_completion_list = list(word)
+    word_as_list = list(word)  # Create a letter equivalent of word_completion_list to compare with the actual word
+
+    # Replace letters in word_completion_list with underscores
+    for i in range(len(word_completion_list)):
+        if not (word_completion_list[i] == " "):
+            word_completion_list[i] = ' _ '
+
+    # Create a word_completion string to display
+    for i in range(len(word_as_list)):
+        if not (word_as_list[i] == " "):
+            word_as_list[i] = " " + word_as_list[i] + " "
+    
+    # Convert the lists back to strings
     word_completion = "".join(word_completion_list)
     word_compare = "".join(word_as_list)
 
     active = False
 
-    while not(guessed) and tries > 0:
+    while not (guessed) and tries > 0:
+        PLAY_MOUSE_POS = pygame.mouse.get_pos()  # Get the mouse position
 
-        PLAY_MOUSE_POS = pygame.mouse.get_pos() #Gets the position of the mouse 
-
+        # Clear the screen and display the background
         SCREEN.blit(BG, (0, 0))
 
-        PLAY_TEXT = get_font(45).render("Hello Hangman", True, "White") #Title of the playing screen
+        # Display the title of the playing screen
+        PLAY_TEXT = get_font(45).render("Hello Hangman", True, "White")
         PLAY_RECT = PLAY_TEXT.get_rect(center=(700, 50))
         SCREEN.blit(PLAY_TEXT, PLAY_RECT)
 
-        #sets the back and quit buttons
-        PLAY_BACK = Button(image=None, pos=(120, 690), 
-                            text_input="BACK", font=get_font(40), base_color="White", hovering_color="Green")
-        PLAY_QUIT = Button(image=None, pos=(1250, 690), 
+        # Create and display Back and Quit buttons
+        PLAY_BACK = Button(image=None, pos=(120, 690),
+                           text_input="BACK", font=get_font(40), base_color="White", hovering_color="Green")
+        PLAY_QUIT = Button(image=None, pos=(1250, 690),
                             text_input="QUIT", font=get_font(40), base_color="White", hovering_color="Green")
-        
-        
-        
+
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         PLAY_BACK.update(SCREEN)
         PLAY_QUIT.changeColor(PLAY_MOUSE_POS)
         PLAY_QUIT.update(SCREEN)
 
-        draw_noose(700, 500)        #Draws the noose for the hangman
+        # Draw the noose for the hangman
+        draw_noose(700, 500)
 
-        
-        hangman_animation(tries) 
-        
-       
+        # Animate the hangman based on the number of tries left
+        hangman_animation(tries)
 
+        # Display the word completion progress
         WORD_TEXT = get_font(20).render(word_completion, True, "Black")
         WORD_RECT = WORD_TEXT.get_rect(center=(700, 180))
         SCREEN.blit(WORD_TEXT, WORD_RECT)
 
-        #Handles events in the hangman game
+        # Handle events in the hangman game
         for event in pygame.event.get():
-            
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN: 
-               if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
-                  BUTTON_SOUND.play()
-                  options()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                    BUTTON_SOUND.play()
+                    options()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_QUIT.checkForInput(PLAY_MOUSE_POS):
-                  pygame.quit()
-                  sys.exit()
+                    pygame.quit()
+                    sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
                     iguess = 'a'
                     active = True
-                    print("a")
                 if event.key == pygame.K_b:
                     iguess = 'b'
                     active = True
@@ -233,67 +254,69 @@ def play(word):
                
 
 
-        pygame.display.update()
+         pygame.display.update()
         if active:
-         answer_key = list(word)                #creates a list of words to call when the program wants to replace the underscores with the uncovered letters
-         # converts user input to uppercase
-         guess = iguess.upper()
-         if (len(guess) == 1 and guess.isalpha()):                    # user guesses a valid letter in the alphabet
-               if guess in guessed_letters:                             # user repeats a guess
-                     print("You already guessed this letter:", guess)
-               elif guess not in word:                                  # user guesses a wrong letter
-                     print("Oops! The letter you guessed is not in the word :(")
-                     tries -= 1                                           # no. of tries decreased
-                     guessed_letters.append(guess)                        # the guess is added to the list of guessed letters
-               else:                                                    # user guesses a correct letter
-                     print("Yay! The letter you guessed is in the word :)")
-                     guessed_letters.append(guess)                        # the guess is added to the list of guessed letters
-                     word_completion_as_list = list(word_completion)     # update word_completion to reveal all occurences of the guessed letter. convert word_completion from a string to a list so we can index into it
-                     word_as_list = list(word_compare)
-                     for i in range (len(word_completion_as_list)-1):                #reveals all instances of the guessed letter
+            # Convert user input to uppercase
+            guess = iguess.upper()
+            if (len(guess) == 1 and guess.isalpha()):  # User guesses a valid letter in the alphabet
+                if guess in guessed_letters:  # User repeats a guess
+                    print("You already guessed this letter:", guess)
+                elif guess not in word:  # User guesses a wrong letter
+                    print("Oops! The letter you guessed is not in the word :(")
+                    tries -= 1  # Decrease the number of tries
+                    guessed_letters.append(guess)  # Add the guess to the list of guessed letters
+                else:  # User guesses a correct letter
+                    print("Yay! The letter you guessed is in the word :)")
+                    guessed_letters.append(guess)  # Add the guess to the list of guessed letters
+                    word_completion_as_list = list(word_completion)  # Update word_completion to reveal guessed letters
+                    word_as_list = list(word_compare)
+                    
+                    # Reveal all instances of the guessed letter
+                    for i in range(len(word_completion_as_list) - 1):
                         if guess == word_as_list[i]:
-                           word_completion_as_list[i] = guess
+                            word_completion_as_list[i] = guess
                         word_completion = "".join(word_completion_as_list)
-                     if "_" not in word_completion:                       # to check if the guessed letter completes the word
+                    
+                    if "_" not in word_completion:  # Check if the word is complete
                         guessed = True
-         elif (len(guess) == 1 and guess.isalpha()):                    # user guesses a valid letter in the alphabet
-               if guess in guessed_letters:                             # user repeats a guess
-                  print("You already guessed this letter:", guess)
-               elif guess not in word:                                  # user guesses a wrong letter
-                  print("Oops! The letter you guessed is not in the word :(")
-                  tries -= 1                                           # no. of tries decreased
-                  guessed_letters.append(guess)                        # the guess is added to the list of guessed letters
-               else:
-                  guessed = True
-                  word_completion = word
-         else:                                                        # if user gives an invalid input
-             print("Not a valid guess.")
-             hangman_animation(tries)                                     # displays state of the hangman after each guess             
-             print(word_completion)                                       # displays current status of the word being guessedprint("\n")
+            elif (len(guess) == 1 and guess.isalpha()):  # User guesses a valid letter in the alphabet
+                if guess in guessed_letters:  # User repeats a guess
+                    print("You already guessed this letter:", guess)
+                elif guess not in word:  # User guesses a wrong letter
+                    print("Oops! The letter you guessed is not in the word :(")
+                    tries -= 1  # Decrease the number of tries
+                    guessed_letters.append(guess)  # Add the guess to the list of guessed letters
+                else:
+                    guessed = True
+                    word_completion = word
+            else:  # User gives an invalid input
+                print("Not a valid guess.")
+                hangman_animation(tries)  # Display the hangman's state after each guess
+                print(word_completion)  # Display the current status of the word being guessed
         if guessed:
             print("WOHOOO! You guessed the word!")
             win()
-               #activate_guess = False
-
         elif tries <= 0:
             print("Sorry, you ran out of tries. The word was " + word + ". Maybe next time!")
             lose()
-               #activate_guess = False
-        
+
+# Function for the win scene
 def win():
     while True:
         WIN_MOUSE_POS = pygame.mouse.get_pos()
 
         SCREEN.blit(BG, (0, 0))
 
+        # Display a win message
         WIN_TEXT = get_font(35).render("WOHOOO! You guessed the word!", True, "Green")
         WIN_RECT = WIN_TEXT.get_rect(center=(700, 350))
         SCREEN.blit(WIN_TEXT, WIN_RECT)
 
-        WIN_BACK = Button(image=None, pos=(120, 690), 
-                            text_input="BACK", font=get_font(40), base_color="White", hovering_color="Green")
-        WIN_QUIT = Button(image=None, pos=(1250, 690), 
-                            text_input="QUIT", font=get_font(40), base_color="White", hovering_color="Green")
+        # Create and display Back and Quit buttons
+        WIN_BACK = Button(image=None, pos=(120, 690),
+                           text_input="BACK", font=get_font(40), base_color="White", hovering_color="Green")
+        WIN_QUIT = Button(image=None, pos=(1250, 690),
+                           text_input="QUIT", font=get_font(40), base_color="White", hovering_color="Green")
 
         WIN_BACK.changeColor(WIN_MOUSE_POS)
         WIN_BACK.update(SCREEN)
@@ -309,26 +332,27 @@ def win():
                     BUTTON_SOUND.play()
                     options()
             if event.type == pygame.MOUSEBUTTONDOWN:
-            	if WIN_QUIT.checkForInput(WIN_MOUSE_POS):
+                if WIN_QUIT.checkForInput(WIN_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
         pygame.display.update()
 
+# Function for the lose scene
 def lose():
     while True:
         LOSE_MOUSE_POS = pygame.mouse.get_pos()
 
         SCREEN.blit(BG, (0, 0))
-        print (result)
 
+        # Display a lose message
         LOSE_TEXT = get_font(35).render("Sorry! You're out of tries!", True, "Red")
-
         LOSE_RECT = LOSE_TEXT.get_rect(center=(700, 350))
         SCREEN.blit(LOSE_TEXT, LOSE_RECT)
 
-        LOSE_BACK = Button(image=None, pos=(120, 690), 
+        # Create and display Back and Quit buttons
+        LOSE_BACK = Button(image=None, pos=(120, 690),
                             text_input="BACK", font=get_font(40), base_color="White", hovering_color="Green")
-        LOSE_QUIT = Button(image=None, pos=(1250, 690), 
+        LOSE_QUIT = Button(image=None, pos=(1250, 690),
                             text_input="QUIT", font=get_font(40), base_color="White", hovering_color="Green")
 
         LOSE_BACK.changeColor(LOSE_MOUSE_POS)
@@ -345,38 +369,39 @@ def lose():
                     BUTTON_SOUND.play()
                     options()
             if event.type == pygame.MOUSEBUTTONDOWN:
-            	if LOSE_QUIT.checkForInput(LOSE_MOUSE_POS):
+                if LOSE_QUIT.checkForInput(LOSE_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
         pygame.display.update()
 
-#options screen that allows user to select the category of their game
+# Options screen that allows the user to select the category of their game
 def options():
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
         SCREEN.blit(BG, (0, 0))
 
-        OPTION1_BUTTON = Button(image=pygame.image.load("assets/Options_Rect.png"), pos=(700, 200), 
-                            text_input="Purdue", font=get_font(55), base_color="White", hovering_color="#d7fcd4")
-        OPTION2_BUTTON = Button(image=pygame.image.load("assets/Options_Rect.png"), pos=(700, 400), 
-                            text_input="Halloween", font=get_font(55), base_color="White", hovering_color="#d7fcd4")
-        OPTION3_BUTTON = Button(image=pygame.image.load("assets/Options_Rect.png"), pos=(700, 600), 
-                            text_input="Christmas", font=get_font(55), base_color="White", hovering_color="#d7fcd4")
+        OPTION1_BUTTON = Button(image=pygame.image.load("assets/Options_Rect.png"), pos=(700, 200),
+                                 text_input="Purdue", font=get_font(55), base_color="White", hovering_color="#d7fcd4")
+        OPTION2_BUTTON = Button(image=pygame.image.load("assets/Options_Rect.png"), pos=(700, 400),
+                                 text_input="Halloween", font=get_font(55), base_color="White", hovering_color="#d7fcd4")
+        OPTION3_BUTTON = Button(image=pygame.image.load("assets/Options_Rect.png"), pos=(700, 600),
+                                 text_input="Christmas", font=get_font(55), base_color="White", hovering_color="#d7fcd4")
 
         for button in [OPTION1_BUTTON, OPTION2_BUTTON, OPTION3_BUTTON]:
             button.changeColor(OPTIONS_MOUSE_POS)
             button.update(SCREEN)
 
+        # Display the category selection text
         OPTIONS_TEXT = get_font(45).render("Pick your category!", True, "White")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(700, 50))
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
-        OPTIONS_BACK = Button(image=None, pos=(120, 690), 
-                            text_input="BACK", font=get_font(40), base_color="White", hovering_color="Green")
-        OPTIONS_QUIT = Button(image=None, pos=(1250, 690), 
-                            text_input="QUIT", font=get_font(40), base_color="White", hovering_color="Green")
-
+        # Create and display Back and Quit buttons
+        OPTIONS_BACK = Button(image=None, pos=(120, 690),
+                              text_input="BACK", font=get_font(40), base_color="White", hovering_color="Green")
+        OPTIONS_QUIT = Button(image=None, pos=(1250, 690),
+                              text_input="QUIT", font=get_font(40), base_color="White", hovering_color="Green")
 
         OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
         OPTIONS_BACK.update(SCREEN)
@@ -391,15 +416,13 @@ def options():
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     BUTTON_SOUND.play()
                     main_menu()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-            	if OPTION1_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
-                  category = "Purdue"
-                  BUTTON_SOUND.play()
-                  BACKGROUND_MUSIC1.set_volume(0.2)
-                  BACKGROUND_MUSIC2.set_volume(0)
-                  BACKGROUND_MUSIC3.set_volume(0)
-                  play(get_word(category))
-            if event.type == pygame.MOUSEBUTTONDOWN:
+                if OPTION1_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    category = "Purdue"
+                    BUTTON_SOUND.play()
+                    BACKGROUND_MUSIC1.set_volume(0.2)
+                    BACKGROUND_MUSIC2.set_volume(0)
+                    BACKGROUND_MUSIC3.set_volume(0)
+                    play(get_word(category))
                 if OPTION2_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     category = "Halloween"
                     BUTTON_SOUND.play()
@@ -407,22 +430,20 @@ def options():
                     BACKGROUND_MUSIC2.set_volume(0.2)
                     BACKGROUND_MUSIC3.set_volume(0)
                     play(get_word(category))
-            if event.type == pygame.MOUSEBUTTONDOWN:
-            	if OPTION3_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
-                  category = "Christmas"
-                  BUTTON_SOUND.play()
-                  BACKGROUND_MUSIC1.set_volume(0)
-                  BACKGROUND_MUSIC2.set_volume(0)
-                  BACKGROUND_MUSIC3.set_volume(0.2)
-                  play(get_word(category))
-            if event.type == pygame.MOUSEBUTTONDOWN:
+                if OPTION3_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    category = "Christmas"
+                    BUTTON_SOUND.play()
+                    BACKGROUND_MUSIC1.set_volume(0)
+                    BACKGROUND_MUSIC2.set_volume(0)
+                    BACKGROUND_MUSIC3.set_volume(0.2)
+                    play(get_word(category))
                 if OPTIONS_QUIT.checkForInput(OPTIONS_MOUSE_POS):
                     pygame.quit()
-                    sys.exit()            		
+                    sys.exit()
 
         pygame.display.update()
 
-#start menu
+# Start menu
 def main_menu():
     while True:
         SCREEN.blit(BG, (0, 0))
@@ -432,25 +453,25 @@ def main_menu():
         MENU_TEXT = get_font(90).render("Hello Hangman", True, "White")
         MENU_RECT = MENU_TEXT.get_rect(center=(690, 100))
 
-        PLAY_BUTTON = Button(image=pygame.image.load("assets/Play_Rect.png"), pos=(690, 350), 
-                            text_input="PLAY", font=get_font(75), base_color="White", hovering_color="#d7fcd4")
-        QUIT_BUTTON = Button(image=pygame.image.load("assets/Quit_Rect.png"), pos=(690, 550), 
-                            text_input="QUIT", font=get_font(75), base_color="White", hovering_color="#d7fcd4")
+        PLAY_BUTTON = Button(image=pygame.image.load("assets/Play_Rect.png"), pos=(690, 350),
+                             text_input="PLAY", font=get_font(75), base_color="White", hovering_color="#d7fcd4")
+        QUIT_BUTTON = Button(image=pygame.image.load("assets/Quit_Rect.png"), pos=(690, 550),
+                             text_input="QUIT", font=get_font(75), base_color="White", hovering_color="#d7fcd4")
 
-        #sets images
+        # Set images
         image = pygame.image.load('assets/PurdueP.png')
-        image = pygame.transform.scale(image, (275,275))
+        image = pygame.transform.scale(image, (275, 275))
         image2 = pygame.image.load('assets/PurdueLogo.png')
-        image2 = pygame.transform.scale(image2, (300,300))
+        image2 = pygame.transform.scale(image2, (300, 300))
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
-        SCREEN.blit(image2,(950, 300))
-        SCREEN.blit(image,(100, 300))
+        SCREEN.blit(image2, (950, 300))
+        SCREEN.blit(image, (100, 300))
 
         for button in [PLAY_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
-        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
