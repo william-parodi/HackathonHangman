@@ -94,6 +94,16 @@ Here are some screenshots from the Hangman Game:
 
 Contributions to this project are welcome! If you have any ideas for improvements or bug fixes, please feel free to submit a pull request.
 
+## Collaborators
+[William Parodi](https://github.com/william-parodi) - Designed the hangman gameplay animations, assisted in the word checking algorithm, managed pulling all the code together, general debugging throughout the project.
+
+[Andrea Navarra](https://github.com/andrea-navarra) - Designed the different scenes throughout the game, composed the background music, programmed the scene changes, programmed the music changes between scenes, populated word bank.
+
+[Himaja Narajala](https://github.com/Himaja-Narajala) - Developed the word selection algorithm, created the program to check answers and penalize/reward players based on it, populated word bank
+
+[Linda Xu](https://github.com/lindarxu) - Designed the buttons used throughout the game
+
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
